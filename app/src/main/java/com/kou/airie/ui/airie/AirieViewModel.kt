@@ -29,18 +29,28 @@ import com.kou.airie.data.AirieRepository
 import com.kou.airie.ui.airie.AirieUiState.Error
 import com.kou.airie.ui.airie.AirieUiState.Loading
 import com.kou.airie.ui.airie.AirieUiState.Success
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class AirieViewModel @Inject constructor(
     private val airieRepository: AirieRepository
 ) : ViewModel() {
-
+    private val _isReady = MutableStateFlow(false)
+    val isReady = _isReady.asStateFlow()
     val uiState: StateFlow<AirieUiState> = airieRepository
         .airies.map<List<String>, AirieUiState>(::Success)
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
+    init {
+        viewModelScope.launch {
+            delay(2000L)
+            _isReady.value = true
+        }
+    }
     fun addAirie(name: String) {
         viewModelScope.launch {
             airieRepository.add(name)

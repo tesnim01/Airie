@@ -24,13 +24,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kou.airie.ui.airie.AirieScreen
+import com.kou.airie.ui.onboarding.OnBoardingScreen
 
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "main") {
-        composable("main") { AirieScreen(modifier = Modifier.padding(16.dp)) }
+        composable("main") { OnBoardingScreen(modifier = Modifier.padding(16.dp)) }
         // TODO: Add more destinations
     }
 }
